@@ -19,5 +19,12 @@ export default defineConfig({
     workbox: { globPatterns: ['**/*.{js,css,html,svg,woff2,png}'], navigateFallback: '/index.html' },
     devOptions: { enabled: true },
   })],
-  server: { port: 5173, host: true },
+  server: {
+    port: 5173,
+    host: true,
+    proxy: {
+      '/api': { target: 'http://127.0.0.1:3000', changeOrigin: true },
+      '/uploads': { target: 'http://127.0.0.1:3000', changeOrigin: true },
+    },
+  },
 })

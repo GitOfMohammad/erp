@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { store, setSession, clearSession } from '../store/store'
 
-export const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000/api/v1', timeout: 20000, headers: { 'Content-Type': 'application/json' } })
+export const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api/v1', timeout: 20000, headers: { 'Content-Type': 'application/json' } })
 api.interceptors.request.use((config) => {
   const token = store.getState().session.accessToken
   if (token) config.headers.Authorization = `Bearer ${token}`

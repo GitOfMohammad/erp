@@ -1,0 +1,1 @@
+const {DataTypes}=require('sequelize');module.exports=s=>s.define('Category',{id:{type:DataTypes.UUID,primaryKey:true,allowNull:false,defaultValue:DataTypes.UUIDV4},name:{type:DataTypes.STRING(100),allowNull:false,unique:true},description:{type:DataTypes.STRING(500),allowNull:true},is_active:{type:DataTypes.TINYINT,allowNull:false,defaultValue:1}},{tableName:'categories'});

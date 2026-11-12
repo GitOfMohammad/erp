@@ -1,0 +1,58 @@
+const Joi = require('joi');
+const id = Joi.string().guid({ version: ['uuidv4', 'uuidv5'] });
+const page = Joi.number().integer().min(1).default(1);
+const limit = Joi.number().integer().min(1).max(100).default(20);
+const date = Joi.date().iso();
+const amount = Joi.string().pattern(/^[1-9][0-9]{0,17}$/).required();
+const accountList = Joi.object({ page, limit, search: Joi.string().trim().max(100).allow('').default(''), accountType: Joi.string().valid('ASSET', 'LIABILITY', 'EQUITY', 'REVENUE', 'EXPENSE', 'MEMORANDUM'), is_active: Joi.number().integer().valid(0, 1) }).required();
+const createAccount = Joi.object({ name: Joi.string().trim().min(2).max(150).required(), accountType: Joi.string().valid('ASSET', 'LIABILITY', 'EQUITY', 'REVENUE', 'EXPENSE', 'MEMORANDUM'), parentId: id.required() }).required();
+const updateAccount = Joi.object({ name: Joi.string().trim().min(2).max(150).required() }).required();
+const journalList = Joi.object({ page, limit, from: date, to: date, sourceType: Joi.string().trim().max(30) }).required();
+const entryLine = Joi.object({ accountId: id.required(), partnerId: id.allow(null), debit: Joi.string().pattern(/^(0|[1-9][0-9]{0,17})$/).default('0'), credit: Joi.string().pattern(/^(0|[1-9][0-9]{0,17})$/).default('0'), description: Joi.string().trim().max(300).allow('', null) });
+const createJournal = Joi.object({ entryDate: date.default(() => new Date()), description: Joi.string().trim().min(2).max(500).required(), lines: Joi.array().min(2).max(100).items(entryLine).required() }).required();
+const reverseJournal = Joi.object({ entryDate: date.default(() => new Date()), description: Joi.string().trim().min(2).max(500).required() }).required();
+const reportDate = Joi.object({ asOf: date }).required();
+const statementPeriod = Joi.object({ from: date.required(), to: date.required() }).custom((value, helpers) => new Date(value.from) <= new Date(value.to) ? value : helpers.error('any.invalid')).required();
+const fiscalClose = Joi.object({ name: Joi.string().trim().min(2).max(80).required(), startDate: Joi.string().isoDate().required(), endDate: Joi.string().isoDate().required(), retainedEarningsAccountId: id.required() }).custom((value, helpers) => value.startDate <= value.endDate ? value : helpers.error('any.invalid')).required();
+const reconciliationList = Joi.object({ page, limit }).required();
+const reconciliationLineList = Joi.object({ page, limit }).required();
+const reconciliationCandidateList = Joi.object({ lineId: id.required(), search: Joi.string().trim().max(100).allow('').default(''), page, limit }).required();
+const signedMoney = Joi.string().pattern(/^-?(0|[1-9][0-9]{0,17})$/).invalid('-0').required();
+const reconciliationCreate = Joi.object({ treasuryAccountId: id.required(), startDate: Joi.string().isoDate().required(), endDate: Joi.string().isoDate().required(), statementOpeningBalance: signedMoney, statementClosingBalance: signedMoney }).custom((value, helpers) => value.startDate <= value.endDate ? value : helpers.error('any.invalid')).required();
+const reconciliationLine = Joi.object({ transactionDate: Joi.string().isoDate().required(), description: Joi.string().trim().min(1).max(300).required(), reference: Joi.string().trim().max(100).allow('', null), amount: signedMoney }).required();
+const reconciliationMatch = Joi.object({ journalLineId: id.required() }).required();
+const treasuryType = Joi.string().valid('CASH', 'BANK', 'PETTY_CASH');
+const treasuryList = Joi.object({ page, limit, search: Joi.string().trim().max(100).allow('').default(''), accountType: treasuryType, is_active: Joi.number().integer().valid(0, 1) }).required();
+const cardNumber = Joi.string().pattern(/^[0-9۰-۹٠-٩]{16}$/).allow('', null);
+const treasuryDetails = { description: Joi.string().trim().max(2000).allow('', null), branchName: Joi.string().trim().max(100).allow('', null), branchCode: Joi.string().trim().max(20).allow('', null), bankAddress: Joi.string().trim().max(300).allow('', null), bankPhone: Joi.string().trim().max(30).allow('', null) };
+const createTreasury = Joi.object({ name: Joi.string().trim().min(2).max(150).required(), accountType: treasuryType.required(), ...treasuryDetails, bankName: Joi.when('accountType', { is: 'BANK', then: Joi.string().trim().min(2).max(100).required(), otherwise: Joi.forbidden() }), accountNumber: Joi.string().trim().max(50).allow('', null), cardNumber: Joi.when('accountType', { is: 'BANK', then: cardNumber.optional(), otherwise: Joi.forbidden() }), iban: Joi.string().trim().max(34).allow('', null), custodianName: Joi.when('accountType', { is: 'PETTY_CASH', then: Joi.string().trim().min(2).max(150).required(), otherwise: Joi.forbidden() }), limitAmount: Joi.when('accountType', { is: 'PETTY_CASH', then: Joi.string().pattern(/^[1-9][0-9]{0,17}$/).required(), otherwise: Joi.forbidden() }), openingBalance: Joi.string().pattern(/^(0|[1-9][0-9]{0,17})$/).default('0'), openingDate: date }).required();
+const updateTreasury = Joi.object({ name: Joi.string().trim().min(2).max(150), ...treasuryDetails, bankName: Joi.string().trim().max(100).allow('', null), accountNumber: Joi.string().trim().max(50).allow('', null), cardNumber, iban: Joi.string().trim().max(34).allow('', null), custodianName: Joi.string().trim().min(2).max(150).allow('', null), limitAmount: Joi.string().pattern(/^[1-9][0-9]{0,17}$/).allow('', null), isActive: Joi.number().integer().valid(0, 1) }).min(1).required();
+const transfer = Joi.object({ sourceAccountId: id.required(), destinationAccountId: id.required(), amount, transferDate: date, reference: Joi.string().trim().max(100).allow('', null), note: Joi.string().trim().max(2000).allow('', null) }).required();
+const reverseTransfer = Joi.object({ reason: Joi.string().trim().min(2).max(500).required(), transferDate: date }).required();
+const transferList = Joi.object({ page, limit, accountId: id, from: date, to: date }).required();
+const transactionList = Joi.object({ page, limit, from: date, to: date }).required();
+const cashVoucherDirection = Joi.string().valid('RECEIPT', 'PAYMENT');
+const cashVoucherOptionList = Joi.object({ page, limit, search: Joi.string().trim().max(100).allow('').default('') }).required();
+const cashVoucherOptionKind = Joi.object({ kind: Joi.string().valid('treasury-accounts', 'partners', 'payment-accounts').required() }).required();
+const directSettlementOptionList = Joi.object({ page, limit, search: Joi.string().trim().max(100).allow('').default('') }).required();
+const directSettlementOptionKind = Joi.object({ kind: Joi.string().valid('customers', 'suppliers').required() }).required();
+const cashVoucherList = Joi.object({ direction: cashVoucherDirection.required(), page, limit, from: date, to: date }).required();
+const chequeRegisterList = Joi.object({ direction: cashVoucherDirection.required(), page, limit }).required();
+const directSettlementList = Joi.object({ page, limit, from: date, to: date }).required();
+const customerChequeList = Joi.object({ status: Joi.string().valid('HELD', 'IN_COLLECTION', 'COLLECTED', 'RETURNED', 'TRANSFERRED', 'ALL').default('HELD'), search: Joi.string().trim().max(100).allow('').default(''), page, limit }).required();
+const receivedCustomerChequeCreate = Joi.object({ entryDate: date.required(), amount: Joi.string().pattern(/^[1-9][0-9]{0,17}$/).required(), partnerId: id.required(), bankName: Joi.string().trim().min(2).max(100).required(), checkNumber: Joi.string().trim().min(1).max(50).required(), checkDate: date.required(), accountNumber: Joi.string().trim().max(50).allow('', null), sayadId: Joi.string().trim().max(50).allow('', null), description: Joi.string().trim().min(2).max(500).required() }).required();
+const customerChequeTransfer = Joi.object({ entryDate: date.required(), payeePartnerId: id.required(), reference: Joi.string().trim().max(100).allow('', null), description: Joi.string().trim().min(2).max(500).required() }).required();
+const companyCheckbookList = Joi.object({ page, limit }).required();
+const companyCheckbookCreate = Joi.object({ name: Joi.string().trim().min(2).max(120).required(), treasuryAccountId: id.required(), numberPrefix: Joi.string().trim().max(20).allow(''), numberStart: Joi.string().pattern(/^\d{1,20}$/).required(), numberEnd: Joi.string().pattern(/^\d{1,20}$/).required() }).required();
+const companyCheckNumberList = Joi.object({ search: Joi.string().trim().max(50).allow('') }).required();
+const companyChequeList = Joi.object({ status: Joi.string().valid('ISSUED', 'CLEARED', 'RETURNED', 'ALL').default('ALL') }).required();
+const companyChequeIssue = Joi.object({ checkNumber: Joi.string().trim().min(1).max(50).required(), sayadId: Joi.string().trim().max(50).allow('', null), entryDate: date.required(), checkDate: date.required(), amount: Joi.string().pattern(/^[1-9][0-9]{0,17}$/).required(), payeePartnerId: id.required(), description: Joi.string().trim().min(2).max(500).required() }).required();
+const companyChequeTransition = Joi.object({ entryDate: date.required(), description: Joi.string().trim().min(2).max(500).required() }).required();
+const cashVoucherCreate = Joi.object({ entryDate: date.required(), amount: Joi.string().pattern(/^[1-9][0-9]{0,17}$/).required(), treasuryAccountId: id.required(), category: Joi.string().trim().max(30).allow(null), paymentTargetType: Joi.string().valid('ACCOUNT', 'PARTNER'), counterpartAccountId: id, partnerId: id.allow(null), method: Joi.string().valid('CASH', 'BANK_TRANSFER', 'CHEQUE', 'OTHER').required(), methodDetails: Joi.object({ instrument: Joi.string().valid('CASH', 'POS').allow(null), bankName: Joi.string().trim().max(100).allow('', null), checkNumber: Joi.string().trim().max(50).allow('', null), accountNumber: Joi.string().trim().max(50).allow('', null), sayadId: Joi.string().trim().max(50).allow('', null), checkDate: date.allow(null), ownerName: Joi.string().trim().max(150).allow('', null) }).allow(null), reference: Joi.string().trim().max(100).allow('', null), description: Joi.string().trim().min(2).max(500).required() }).required();
+const cashVoucherReverse = Joi.object({ entryDate: date.required(), reason: Joi.string().trim().min(2).max(500).required() }).required();
+const directPartnerSettlementCreate = Joi.object({ entryDate: date.required(), amount: Joi.string().pattern(/^[1-9][0-9]{0,17}$/).required(), customerPartnerId: id.required(), supplierPartnerId: id.required(), reference: Joi.string().trim().max(100).allow('', null), description: Joi.string().trim().min(2).max(500).required() }).required();
+module.exports = { accountList, createAccount, updateAccount, journalList, createJournal, reverseJournal, reportDate, statementPeriod, fiscalClose, reconciliationList, reconciliationLineList, reconciliationCandidateList, reconciliationCreate, reconciliationLine, reconciliationMatch, treasuryList, createTreasury, updateTreasury, transfer, reverseTransfer, transferList, transactionList, cashVoucherList, cashVoucherOptionList, cashVoucherOptionKind, directSettlementOptionList, directSettlementOptionKind, chequeRegisterList, directSettlementList, cashVoucherCreate, cashVoucherReverse, directPartnerSettlementCreate, customerChequeList, receivedCustomerChequeCreate, customerChequeTransfer, companyCheckbookList, companyCheckbookCreate, companyCheckNumberList, companyChequeList, companyChequeIssue, companyChequeTransition };
+
+
+
+

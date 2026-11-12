@@ -1,0 +1,2 @@
+const {DataTypes}=require('sequelize');
+module.exports=s=>s.define('ShiftAssignment',{id:{type:DataTypes.UUID,primaryKey:true,defaultValue:DataTypes.UUIDV4},employee_id:{type:DataTypes.UUID,allowNull:false},shift_id:{type:DataTypes.UUID,allowNull:false},work_date:{type:DataTypes.DATEONLY,allowNull:false},assigned_by:{type:DataTypes.UUID,allowNull:false},note:{type:DataTypes.STRING(500)}},{tableName:'hr_shift_assignments',indexes:[{unique:true,fields:['employee_id','work_date']}]});

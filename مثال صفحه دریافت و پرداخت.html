@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ثبت سند دریافت</title>
+<style>
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  :root{
+    --bg:#eef1f8; --card:#fff; --ink:#1b2138; --muted:#77809a; --line:#e3e7f1;
+    --brand:#4338ca; --brand-2:#6d5ef0; --brand-soft:#eef0ff;
+    --ok:#0f9960; --ok-soft:#e6f7ef; --warn:#d97706; --warn-soft:#fff5e5;
+    --danger:#dc2626; --danger-soft:#fdeaea; --radius:16px;
+    --shadow:0 1px 2px rgba(16,24,40,.04), 0 10px 30px -14px rgba(16,24,40,.28);
+  }
+  html,body{height:100%}
+  body{
+    margin:0;font-family:Tahoma,system-ui,sans-serif;font-size:14px;line-height:1.8;
+    color:var(--ink);
+    background:
+      radial-gradient(1200px 480px at 100% -12%, #e4e8ff 0%, transparent 62%),
+      radial-gradient(900px 480px at -10% 0%, #e2f6f0 0%, transparent 55%),
+      var(--bg);
+    min-height:100%;
+  }
+  .app{max-width:1180px;margin:0 auto;padding:26px 20px 70px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(140deg,var(--brand),var(--brand-2));color:#fff;font-size:22px;font-weight:700}
+  .brand h1{margin:0;font-size:18px;font-weight:700}
+  .brand p{margin:0;font-size:12.5px;color:var(--muted)}
+  .docno{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+    padding:8px 14px;border-radius:12px;font-size:13px;color:var(--muted);box-shadow:var(--shadow)}
+  .docno b{color:var(--ink);font-weight:600;direction:ltr}
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+  @media (max-width:980px){ .layout{grid-template-columns:1fr} }
+  .card{background:var(--card);border:1px solid rgba(227,231,241,.9);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .form-card{padding:8px 24px 24px}
+  .section{padding:20px 0;border-bottom:1px dashed var(--line)}
+  .section:last-of-type{border-bottom:0;padding-bottom:6px}
+  .section-title{display:flex;align-items:center;gap:10px;font-size:15px;font-weight:600;margin-bottom:16px}
+  .section-title .num{width:24px;height:24px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    background:var(--brand-soft);color:var(--brand);font-size:12.5px;font-weight:700}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media (max-width:760px){ .g2,.g3{grid-template-columns:1fr} }
+  .field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;font-weight:500}
+  .field label .req{color:var(--danger);margin-right:2px}
+  input[type=text],input[type=number],select,textarea{
+    width:100%;padding:10px 13px;font-family:inherit;font-size:14px;color:var(--ink);
+    background:#fbfcff;border:1.5px solid var(--line);border-radius:11px;
+  }
+  textarea{resize:vertical;min-height:88px;line-height:1.9}
+  input::placeholder,textarea::placeholder{color:#b3bacb}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--brand);background:#fff;
+    box-shadow:0 0 0 4px rgba(67,56,202,.10)}
+  input.invalid,select.invalid,textarea.invalid{border-color:var(--danger);background:#fffafa;
+    box-shadow:0 0 0 4px rgba(220,38,38,.09)}
+  select{appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2377809a' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:left 13px center;background-size:13px;
+    padding-left:36px;cursor:pointer}
+  .methods{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  @media (max-width:760px){ .methods{grid-template-columns:1fr 1fr} }
+  .method{position:relative;cursor:pointer;text-align:center;padding:15px 10px 13px;
+    border:1.6px solid var(--line);border-radius:14px;background:#fbfcff;
+    transition:border-color .18s,background .18s,box-shadow .18s;user-select:none;display:block}
+  .method input{position:absolute;opacity:0;pointer-events:none}
+  .method .m-icon{font-size:22px;display:block;line-height:1.2}
+  .method .m-title{display:block;font-weight:600;margin-top:5px;font-size:13.5px}
+  .method .m-sub{display:block;font-size:11.5px;color:var(--muted);margin-top:1px}
+  .method:hover{border-color:#c9cfeb;background:#fff}
+  .method.active{border-color:var(--brand);background:#f4f5ff;
+    box-shadow:0 0 0 4px rgba(67,56,202,.09)}
+  .method.active .m-title{color:var(--brand)}
+  .chips{display:flex;gap:10px;flex-wrap:wrap}
+  .chip{cursor:pointer;position:relative}
+  .chip input{position:absolute;opacity:0;pointer-events:none}
+  .chip span{display:inline-block;padding:9px 18px;border-radius:11px;border:1.5px solid var(--line);
+    background:#fbfcff;font-size:13.5px;color:#454d68;transition:all .16s}
+  .chip:hover span{border-color:#c9cfeb}
+  .chip.active span{border-color:var(--brand);background:var(--brand-soft);color:var(--brand);font-weight:600}
+  .panel{display:none;margin-top:16px}
+  .panel.active{display:block}
+  .hint{display:flex;gap:9px;align-items:flex-start;background:#f6f8ff;border:1px solid #e3e8fb;color:#4a5578;
+    border-radius:11px;padding:10px 13px;font-size:12.5px;line-height:1.8;margin-bottom:14px}
+  .hint .ic{font-size:15px}
+  .hint.warn{background:var(--warn-soft);border-color:#f7e3c0;color:#8a5a10}
+  .amount-wrap{position:relative}
+  .amount-wrap input{font-size:19px;font-weight:600;padding:13px 16px;padding-left:70px;background:#fff}
+  .amount-wrap .unit{position:absolute;left:16px;top:50%;transform:translateY(-50%);
+    font-size:12.5px;color:var(--muted);pointer-events:none}
+  .words{font-size:12.5px;color:var(--brand);margin-top:8px;min-height:20px;font-weight:500}
+  .words.empty{color:#b3bacb;font-weight:400}
+  .side{padding:22px 20px}
+  .side-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+  .side-head h3{margin:0;font-size:15px;font-weight:700}
+  .badge{font-size:11.5px;padding:4px 11px;border-radius:999px;font-weight:600;white-space:nowrap}
+  .badge.idle{background:#f1f3f9;color:var(--muted)}
+  .badge.ok{background:var(--ok-soft);color:var(--ok)}
+  .badge.warn{background:var(--warn-soft);color:var(--warn)}
+  .badge.danger{background:var(--danger-soft);color:var(--danger)}
+  .side-row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:7px 0;font-size:13px}
+  .side-row span{color:var(--muted)}
+  .side-row b{font-weight:600}
+  .divider{height:1px;background:var(--line);margin:12px 0}
+  .side-row.big span{font-size:13.5px;color:#4a5578}
+  .side-row.big b{font-size:17px;color:var(--brand)}
+  .side-row.neg b{color:var(--danger)}
+  .progress{height:8px;border-radius:99px;background:#eef0f7;overflow:hidden;margin:8px 0 4px}
+  .progress i{display:block;height:100%;width:0;border-radius:99px;
+    background:linear-gradient(90deg,var(--brand),var(--brand-2));transition:width .35s}
+  .progress i.full{background:#0f9960}
+  .progress i.over{background:#dc2626}
+  .side-note{font-size:12px;color:var(--muted);background:#f8f9fd;border-radius:10px;padding:10px 12px;margin:16px 0 0}
+  .actions{display:flex;gap:12px;margin-top:22px;flex-wrap:wrap}
+  .btn{font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border-radius:12px;
+    padding:12px 26px;border:1.5px solid transparent;display:inline-flex;align-items:center;gap:8px}
+  .btn-primary{background:linear-gradient(140deg,var(--brand),var(--brand-2));color:#fff}
+  .btn-primary:hover{opacity:.92}
+  .btn-ghost{background:#fff;border-color:var(--line);color:#4a5578}
+  .btn-ghost:hover{background:#f7f8fd}
+  .list-card{margin-top:22px;padding:20px 22px 8px}
+  .list-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .list-head h3{margin:0;font-size:15px;font-weight:700}
+  .list-head .count{font-size:12px;color:var(--muted)}
+  .table-wrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+  th{text-align:right;font-weight:600;color:var(--muted);font-size:12px;
+    padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:12px;border-bottom:1px solid #f1f3f9;vertical-align:middle}
+  tbody tr:hover{background:#fafbff}
+  td.money{font-weight:600;color:var(--brand);white-space:nowrap}
+  .tag{display:inline-block;font-size:11.5px;padding:3px 10px;border-radius:8px;
+    background:var(--brand-soft);color:var(--brand);font-weight:600}
+  .empty-row td{text-align:center;color:#b3bacb;padding:26px}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,26px);
+    background:#1b2138;color:#fff;padding:12px 22px;border-radius:12px;font-size:13.5px;font-weight:500;
+    opacity:0;pointer-events:none;transition:opacity .28s,transform .28s;z-index:99;
+    box-shadow:0 18px 40px -16px rgba(0,0,0,.6);max-width:90vw;text-align:center}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+  .toast.ok{background:#0f9960}
+  .toast.err{background:#dc2626}
+  #diag{position:fixed;bottom:8px;left:8px;background:#6b7280;color:#fff;
+    padding:5px 12px;border-radius:8px;font-size:11px;z-index:99999;
+    font-family:monospace;opacity:.85;transition:opacity .5s;max-width:280px}
+</style>
+</head>
+<body>
+
+<div id="diag">⏳ در حال بارگذاری…</div>
+
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">ح</div>
+      <div>
+        <h1>ثبت سند دریافت</h1>
+        <p>حسابداری پیشرفته — دریافت از بدهکاران</p>
+      </div>
+    </div>
+    <div class="docno"><span>شماره سند:</span><b id="docNo">RC-1403-0042</b></div>
+  </header>
+
+  <div class="layout">
+    <main class="card form-card">
+      <form id="receiveForm" novalidate>
+
+        <section class="section">
+          <div class="section-title"><span class="num">۱</span> انتخاب بدهکار</div>
+          <div class="grid g2">
+            <div class="field">
+              <label for="debtor">بدهکار <span class="req">*</span></label>
+              <select id="debtor"><option value="">— انتخاب کنید —</option></select>
+            </div>
+            <div class="field">
+              <label for="docDate">تاریخ سند</label>
+              <input type="text" id="docDate">
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><span class="num">۲</span> روش دریافت</div>
+
+          <div class="methods" id="methods">
+            <label class="method active" data-method="cash">
+              <input type="radio" name="method" value="cash" checked>
+              <span class="m-icon">💵</span><span class="m-title">نقد</span><span class="m-sub">صندوق / کارت‌خوان</span>
+            </label>
+            <label class="method" data-method="cheque">
+              <input type="radio" name="method" value="cheque">
+              <span class="m-icon">🧾</span><span class="m-title">چک</span><span class="m-sub">چک دریافتی</span>
+            </label>
+            <label class="method" data-method="bank">
+              <input type="radio" name="method" value="bank">
+              <span class="m-icon">🏦</span><span class="m-title">بانک</span><span class="m-sub">واریز / حواله</span>
+            </label>
+            <label class="method" data-method="other">
+              <input type="radio" name="method" value="other">
+              <span class="m-icon">🔁</span><span class="m-title">سایر</span><span class="m-sub">تسویه طرفینی</span>
+            </label>
+          </div>
+
+          <div class="panel active" data-panel="cash">
+            <div class="hint"><span class="ic">ℹ️</span>
+              <span>دریافت وجه نقد؛ در صورت دریافت با کارت‌خوان شماره پیگیری تراکنش را وارد کنید.</span></div>
+            <div class="grid g2">
+              <div class="field">
+                <label>محل دریافت <span class="req">*</span></label>
+                <div class="chips" id="cashChips">
+                  <label class="chip active"><input type="radio" name="cashType" value="صندوق" checked><span>صندوق</span></label>
+                  <label class="chip"><input type="radio" name="cashType" value="کارت‌خوان"><span>کارت‌خوان</span></label>
+                </div>
+              </div>
+              <div class="field" id="posWrap" hidden>
+                <label for="posTracking">شماره پیگیری تراکنش <span class="req">*</span></label>
+                <input type="text" id="posTracking">
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" data-panel="cheque">
+            <div class="hint warn"><span class="ic">🧾</span>
+              <span>اطلاعات چک را دقیقاً مطابق چک فیزیکی وارد کنید. شماره صیادی ۱۶ رقمی است.</span></div>
+            <div class="grid g3">
+              <div class="field"><label for="chqBank">نام بانک <span class="req">*</span></label>
+                <select id="chqBank"><option value="">— انتخاب بانک —</option></select></div>
+              <div class="field"><label for="chqNo">شماره چک <span class="req">*</span></label>
+                <input type="text" id="chqNo"></div>
+              <div class="field"><label for="chqDate">تاریخ چک <span class="req">*</span></label>
+                <input type="text" id="chqDate"></div>
+              <div class="field"><label for="chqAccount">شماره حساب <span class="req">*</span></label>
+                <input type="text" id="chqAccount"></div>
+              <div class="field"><label for="chqOwner">صاحب چک <span class="req">*</span></label>
+                <input type="text" id="chqOwner"></div>
+              <div class="field"><label for="chqSayadi">شماره صیادی (۱۶ رقم) <span class="req">*</span></label>
+                <input type="text" id="chqSayadi" maxlength="16"></div>
+            </div>
+          </div>
+
+          <div class="panel" data-panel="bank">
+            <div class="hint"><span class="ic">🏦</span>
+              <span>واریز نقدی یا حواله به حساب شرکت؛ شماره پیگیری بانکی الزامی است.</span></div>
+            <div class="grid g2">
+              <div class="field"><label for="bnkName">بانک مقصد <span class="req">*</span></label>
+                <select id="bnkName"><option value="">— انتخاب بانک —</option></select></div>
+              <div class="field"><label for="bnkAccount">شماره حساب / شبا <span class="req">*</span></label>
+                <input type="text" id="bnkAccount"></div>
+              <div class="field"><label for="bnkTracking">شماره پیگیری <span class="req">*</span></label>
+                <input type="text" id="bnkTracking"></div>
+              <div class="field"><label for="bnkDate">تاریخ واریز <span class="req">*</span></label>
+                <input type="text" id="bnkDate"></div>
+            </div>
+          </div>
+
+          <div class="panel" data-panel="other">
+            <div class="hint warn"><span class="ic">🔁</span>
+              <span>وقتی بدهکار مبلغ را مستقیماً به حساب یکی از <b>طلبکاران</b> ما واریز می‌کند.</span></div>
+            <div class="grid g3">
+              <div class="field"><label for="othCreditor">طرف حساب طلبکار <span class="req">*</span></label>
+                <select id="othCreditor"><option value="">— انتخاب کنید —</option></select></div>
+              <div class="field"><label for="othDate">تاریخ تسویه <span class="req">*</span></label>
+                <input type="text" id="othDate"></div>
+              <div class="field"><label for="othRef">شماره مرجع / رسید</label>
+                <input type="text" id="othRef"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-title"><span class="num">۳</span> مبلغ و توضیحات</div>
+          <div class="field" style="margin-bottom:16px">
+            <label for="amount">مبلغ دریافت <span class="req">*</span></label>
+            <div class="amount-wrap">
+              <input type="text" id="amount" placeholder="0" autocomplete="off">
+              <span class="unit">ریال</span>
+            </div>
+            <div class="words empty" id="amountWords">—</div>
+          </div>
+          <div class="field">
+            <label for="desc">توضیحات</label>
+            <textarea id="desc" placeholder="مثلاً: دریافت علی‌الحساب از فاکتور شماره ۱۴۲۵ ..."></textarea>
+          </div>
+        </section>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">✔ ثبت دریافت</button>
+          <button type="button" class="btn btn-ghost" id="resetBtn">پاک‌سازی فرم</button>
+        </div>
+      </form>
+    </main>
+
+    <aside class="card side">
+      <div class="side-head">
+        <h3>خلاصه سند</h3>
+        <span class="badge idle" id="statusChip">در انتظار مبلغ</span>
+      </div>
+      <div class="side-row"><span>بدهکار</span><b id="sDebtor">—</b></div>
+      <div class="side-row"><span>مانده بدهی</span><b id="sBalance">—</b></div>
+      <div class="side-row"><span>روش دریافت</span><b id="sMethod">نقد — صندوق</b></div>
+      <div class="divider"></div>
+      <div class="side-row big"><span>مبلغ دریافت</span><b id="sAmount">۰ ریال</b></div>
+      <div class="progress"><i id="sBar"></i></div>
+      <div class="side-row" id="remainRow"><span>مانده پس از دریافت</span><b id="sRemain">—</b></div>
+      <p class="side-note" id="sideNote">برای شروع، بدهکار و مبلغ دریافت را مشخص کنید.</p>
+    </aside>
+  </div>
+
+  <section class="card list-card">
+    <div class="list-head">
+      <h3>دریافت‌های ثبت‌شده در این نشست</h3>
+      <span class="count" id="listCount">۰ سند</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr>
+          <th>شماره سند</th><th>تاریخ</th><th>بدهکار</th>
+          <th>روش</th><th>جزئیات</th><th>مبلغ (ریال)</th><th></th>
+        </tr></thead>
+        <tbody id="tbody">
+          <tr class="empty-row"><td colspan="7">هنوز سندی ثبت نشده است.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  function byId(id){ return document.getElementById(id); }
+  function bySel(s){ return document.querySelectorAll(s); }
+  function diag(msg, status){
+    var el = byId('diag');
+    if (!el) return;
+    el.textContent = msg;
+    el.style.background = status === false ? '#dc2626' : (status === true ? '#0f9960' : '#6b7280');
+    if (status === true){ setTimeout(function(){ el.style.opacity = '0'; }, 3500); }
+  }
+
+  try {
+    diag('⏳ در حال راه‌اندازی…');
+
+    /* ---------- helpers ---------- */
+    function toEn(str){
+      var s = String(str == null ? '' : str);
+      var fa = '۰۱۲۳۴۵۶۷۸۹', ar = '٠١٢٣٤٥٦٧٨٩', out = '';
+      for (var i = 0; i < s.length; i++){
+        var c = s.charAt(i);
+        var fi = fa.indexOf(c), ai = ar.indexOf(c);
+        if (fi >= 0) out += fi;
+        else if (ai >= 0) out += ai;
+        else out += c;
+      }
+      return out;
+    }
+    function toFa(str){
+      var s = String(str == null ? '' : str), out = '';
+      for (var i = 0; i < s.length; i++){
+        var c = s.charAt(i), n = '0123456789'.indexOf(c);
+        if (n >= 0) out += '۰۱۲۳۴۵۶۷۸۹'.charAt(n);
+        else out += c;
+      }
+      return out;
+    }
+    function digitsOnly(s){ return toEn(s).replace(/[^0-9]/g, ''); }
+    function fmt(n){
+      var num = Math.round(Number(n) || 0);
+      var neg = num < 0;
+      var s = String(Math.abs(num));
+      var f = '', c = 0;
+      for (var i = s.length - 1; i >= 0; i--){
+        f = s.charAt(i) + f;
+        c++;
+        if (c % 3 === 0 && i > 0) f = ',' + f;
+      }
+      return (neg ? '-' : '') + toFa(f);
+    }
+    function pad4(n){
+      var s = String(n);
+      while (s.length < 4) s = '0' + s;
+      return s;
+    }
+    function numWords(num){
+      num = Math.round(Number(num) || 0);
+      if (num === 0) return 'صفر';
+      if (num < 0) return 'منفی ' + numWords(-num);
+      var y = ['','یک','دو','سه','چهار','پنج','شش','هفت','هشت','نه'];
+      var d = ['','','بیست','سی','چهل','پنجاه','شصت','هفتاد','هشتاد','نود'];
+      var dy = ['ده','یازده','دوازده','سیزده','چهارده','پانزده','شانزده','هفده','هجده','نوزده'];
+      var s = ['','صد','دویست','سیصد','چهارصد','پانصد','ششصد','هفتصد','هشتصد','نهصد'];
+      var sc = ['','هزار','میلیون','میلیارد','تریلیون'];
+      function three(n){
+        var out = [], ss = Math.floor(n / 100), r = n % 100, dd = Math.floor(r / 10), yy = r % 10;
+        if (ss) out.push(s[ss]);
+        if (r >= 10 && r < 20) out.push(dy[r - 10]);
+        else { if (dd) out.push(d[dd]); if (yy) out.push(y[yy]); }
+        return out.join(' و ');
+      }
+      var g = [], rest = num;
+      while (rest > 0){ g.push(rest % 1000); rest = Math.floor(rest / 1000); }
+      var parts = [];
+      for (var i = g.length - 1; i >= 0; i--){
+        if (g[i] === 0) continue;
+        parts.push(three(g[i]) + (sc[i] ? ' ' + sc[i] : ''));
+      }
+      return parts.join(' و ');
+    }
+    function escapeHtml(s){
+      return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+        return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+      });
+    }
+
+    /* ---------- data ---------- */
+    var DEBTORS = [
+      { id:'D-1001', name:'شرکت پخش آریا', balance: 48500000 },
+      { id:'D-1002', name:'فروشگاه زنجیره‌ای پارس', balance: 127500000 },
+      { id:'D-1003', name:'مهندس رضا کریمی', balance: 8600000 },
+      { id:'D-1004', name:'بازرگانی نوین تجارت', balance: 230000000 },
+      { id:'D-1005', name:'مجتمع صنعتی البرز', balance: 0 },
+      { id:'D-1006', name:'آقای سعید محمدی', balance: 12300000 }
+    ];
+    var CREDITORS = [
+      { id:'C-01', name:'شرکت مهرگان (تأمین‌کننده قطعات)' },
+      { id:'C-02', name:'حساب شخصی آقای موسوی' },
+      { id:'C-03', name:'بازرگانی سپهر — بستانکار' },
+      { id:'C-04', name:'شرکت حمل‌ونقل بار سریع' }
+    ];
+    var BANKS = ['بانک ملی','بانک ملت','بانک صادرات','بانک تجارت','بانک سپه','بانک پاسارگاد',
+      'بانک سامان','بانک کشاورزی','بانک رفاه','بانک مسکن','بانک آینده','بانک شهر',
+      'بانک اقتصاد نوین','بانک پارسیان','بانک سینا','بانک دی','بانک سرمایه','پست بانک'];
+
+    var DEFAULT_DATE = '۱۴۰۳/۰۵/۱۲';
+    var nextDocNumber = 42;
+    var rowCount = 0;
+
+    /* ---------- state readers ---------- */
+    function getMethod(){
+      var r = document.querySelector('input[name="method"]:checked');
+      return r ? r.value : 'cash';
+    }
+    function getCashType(){
+      var r = document.querySelector('input[name="cashType"]:checked');
+      return r ? r.value : 'صندوق';
+    }
+    function getAmount(){ return Number(digitsOnly(byId('amount').value)) || 0; }
+    function getDebtorById(id){
+      for (var i = 0; i < DEBTORS.length; i++) if (DEBTORS[i].id === id) return DEBTORS[i];
+      return null;
+    }
+    function getCurrentDebtor(){ return getDebtorById(byId('debtor').value); }
+    function methodLabel(){
+      var m = getMethod();
+      if (m === 'cash') return 'نقد — ' + getCashType();
+      if (m === 'cheque') return 'چک';
+      if (m === 'bank') return 'بانک';
+      if (m === 'other') return 'سایر (تسویه طرفینی)';
+      return '—';
+    }
+
+    /* ---------- render ---------- */
+    function refreshDocNo(){ byId('docNo').textContent = 'RC-1403-' + pad4(nextDocNumber); }
+
+    function renderDebtors(keepId){
+      var sel = byId('debtor');
+      sel.innerHTML = '<option value="">— انتخاب کنید —</option>';
+      for (var i = 0; i < DEBTORS.length; i++){
+        var d = DEBTORS[i];
+        var o = document.createElement('option');
+        o.value = d.id;
+        o.textContent = d.balance > 0
+          ? d.name + ' — بدهی ' + fmt(d.balance) + ' ریال'
+          : d.name + ' — بدون بدهی';
+        sel.appendChild(o);
+      }
+      sel.value = keepId || '';
+    }
+
+    function updateWords(){
+      var box = byId('amountWords');
+      var a = getAmount();
+      if (a > 0){
+        box.textContent = numWords(a) + ' ریال';
+        box.classList.remove('empty');
+      } else {
+        box.textContent = '—';
+        box.classList.add('empty');
+      }
+    }
+
+    function updateSummary(){
+      var d = getCurrentDebtor();
+      var a = getAmount();
+
+      byId('sDebtor').textContent = d ? d.name : '—';
+      byId('sBalance').textContent = d ? fmt(d.balance) + ' ریال' : '—';
+      byId('sMethod').textContent = methodLabel();
+      byId('sAmount').textContent = fmt(a) + ' ریال';
+
+      var bar = byId('sBar'), remainRow = byId('remainRow'), chip = byId('statusChip');
+
+      if (!d || a === 0){
+        byId('sRemain').textContent = '—';
+        remainRow.classList.remove('neg');
+        bar.style.width = '0%';
+        bar.className = '';
+        chip.className = 'badge idle';
+        chip.textContent = 'در انتظار مبلغ';
+        byId('sideNote').textContent = 'برای شروع، بدهکار و مبلغ دریافت را مشخص کنید.';
+        return;
+      }
+
+      var remain = d.balance - a;
+      remainRow.classList.toggle('neg', remain < 0);
+      byId('sRemain').textContent = fmt(remain) + ' ریال';
+
+      var pct = d.balance > 0 ? (a / d.balance) * 100 : 100;
+      bar.style.width = Math.min(100, pct) + '%';
+      bar.className = pct >= 100 ? (pct > 100 ? 'over' : 'full') : '';
+
+      if (a < d.balance){
+        chip.className = 'badge warn';
+        chip.textContent = 'علی‌الحساب';
+        byId('sideNote').textContent = 'این دریافت بخشی از بدهی را پوشش می‌دهد و سند علی‌الحساب ثبت می‌شود.';
+      } else if (a === d.balance){
+        chip.className = 'badge ok';
+        chip.textContent = 'تسویه کامل';
+        byId('sideNote').textContent = 'با ثبت این سند، حساب بدهکار کاملاً تسویه می‌شود.';
+      } else {
+        chip.className = 'badge danger';
+        chip.textContent = 'بیش از مانده';
+        byId('sideNote').textContent = 'مبلغ وارد شده از مانده بدهی بیشتر است؛ مانده به حالت بستانکار تغییر می‌کند.';
+      }
+    }
+
+    function setMethod(m){
+      var methodEls = bySel('.method');
+      for (var i = 0; i < methodEls.length; i++){
+        methodEls[i].classList.toggle('active', methodEls[i].getAttribute('data-method') === m);
+      }
+      var panelEls = bySel('.panel');
+      for (var j = 0; j < panelEls.length; j++){
+        panelEls[j].classList.toggle('active', panelEls[j].getAttribute('data-panel') === m);
+      }
+      updateSummary();
+    }
+
+    function buildDetail(){
+      var m = getMethod();
+      if (m === 'cash'){
+        return getCashType() === 'کارت‌خوان'
+          ? 'کارت‌خوان — پیگیری ' + escapeHtml(byId('posTracking').value)
+          : 'وجه نقد — صندوق';
+      }
+      if (m === 'cheque'){
+        return 'چک ' + escapeHtml(byId('chqBank').value) + ' — شماره ' + escapeHtml(toFa(byId('chqNo').value));
+      }
+      if (m === 'bank'){
+        return escapeHtml(byId('bnkName').value) + ' — پیگیری ' + escapeHtml(byId('bnkTracking').value);
+      }
+      if (m === 'other'){
+        var cid = byId('othCreditor').value;
+        for (var i = 0; i < CREDITORS.length; i++){
+          if (CREDITORS[i].id === cid) return 'واریز به ' + escapeHtml(CREDITORS[i].name);
+        }
+        return 'واریز به —';
+      }
+      return '—';
+    }
+
+    function toast(msg, type){
+      var t = byId('toast');
+      t.textContent = msg;
+      t.className = 'toast show ' + (type || 'ok');
+      setTimeout(function(){ t.className = 'toast ' + (type || 'ok'); }, 3400);
+    }
+
+    function updateListCount(){ byId('listCount').textContent = toFa(rowCount) + ' سند'; }
+
+    /* ---------- validation ---------- */
+    function markInvalid(el){ el.classList.add('invalid'); }
+
+    function validate(){
+      var errors = [];
+      function add(el, msg){ markInvalid(el); errors.push(msg); }
+
+      if (!byId('debtor').value) add(byId('debtor'), 'انتخاب بدهکار الزامی است.');
+      if (getAmount() <= 0) add(byId('amount'), 'مبلغ دریافت را وارد کنید.');
+
+      var m = getMethod();
+
+      if (m === 'cash' && getCashType() === 'کارت‌خوان' && !byId('posTracking').value.trim()){
+        add(byId('posTracking'), 'شماره پیگیری تراکنش را وارد کنید.');
+      }
+
+      if (m === 'cheque'){
+        if (!byId('chqBank').value) add(byId('chqBank'), 'نام بانک چک را انتخاب کنید.');
+        if (!digitsOnly(byId('chqNo').value)) add(byId('chqNo'), 'شماره چک را وارد کنید.');
+        if (!byId('chqDate').value.trim()) add(byId('chqDate'), 'تاریخ چک را وارد کنید.');
+        if (!digitsOnly(byId('chqAccount').value)) add(byId('chqAccount'), 'شماره حساب را وارد کنید.');
+        if (!byId('chqOwner').value.trim()) add(byId('chqOwner'), 'نام صاحب چک را وارد کنید.');
+        if (digitsOnly(byId('chqSayadi').value).length !== 16){
+          add(byId('chqSayadi'), 'شماره صیادی باید ۱۶ رقم باشد.');
+        }
+      }
+
+      if (m === 'bank'){
+        if (!byId('bnkName').value) add(byId('bnkName'), 'بانک مقصد را انتخاب کنید.');
+        if (!byId('bnkAccount').value.trim()) add(byId('bnkAccount'), 'شماره حساب / شبا را وارد کنید.');
+        if (!byId('bnkTracking').value.trim()) add(byId('bnkTracking'), 'شماره پیگیری را وارد کنید.');
+        if (!byId('bnkDate').value.trim()) add(byId('bnkDate'), 'تاریخ واریز را وارد کنید.');
+      }
+
+      if (m === 'other'){
+        if (!byId('othCreditor').value) add(byId('othCreditor'), 'طرف حساب طلبکار را انتخاب کنید.');
+        if (!byId('othDate').value.trim()) add(byId('othDate'), 'تاریخ تسویه را وارد کنید.');
+      }
+
+      return errors;
+    }
+
+    /* ---------- clear entry fields ---------- */
+    function clearEntryFields(){
+      byId('amount').value = '';
+      byId('desc').value = '';
+      byId('posTracking').value = '';
+      var ids = ['chqBank','chqNo','chqAccount','chqOwner','chqSayadi',
+                 'bnkName','bnkAccount','bnkTracking','othCreditor','othRef'];
+      for (var i = 0; i < ids.length; i++) byId(ids[i]).value = '';
+      byId('chqDate').value = DEFAULT_DATE;
+      byId('bnkDate').value = DEFAULT_DATE;
+      byId('othDate').value = DEFAULT_DATE;
+      var inv = bySel('.invalid');
+      for (var j = 0; j < inv.length; j++) inv[j].classList.remove('invalid');
+      updateWords();
+      updateSummary();
+    }
+
+    /* ---------- init ---------- */
+    function init(){
+      renderDebtors();
+
+      var cSel = byId('othCreditor');
+      for (var i = 0; i < CREDITORS.length; i++){
+        var o = document.createElement('option');
+        o.value = CREDITORS[i].id;
+        o.textContent = CREDITORS[i].name;
+        cSel.appendChild(o);
+      }
+
+      ['chqBank', 'bnkName'].forEach(function(selId){
+        var el = byId(selId);
+        for (var k = 0; k < BANKS.length; k++){
+          var opt = document.createElement('option');
+          opt.value = BANKS[k];
+          opt.textContent = BANKS[k];
+          el.appendChild(opt);
+        }
+      });
+
+      byId('docDate').value = DEFAULT_DATE;
+      byId('chqDate').value = DEFAULT_DATE;
+      byId('bnkDate').value = DEFAULT_DATE;
+      byId('othDate').value = DEFAULT_DATE;
+
+      refreshDocNo();
+      updateSummary();
+      updateListCount();
+
+      /* clear invalid on any input/change */
+      document.addEventListener('input', function(e){
+        if (e.target && e.target.classList) e.target.classList.remove('invalid');
+      }, true);
+      document.addEventListener('change', function(e){
+        if (e.target && e.target.classList) e.target.classList.remove('invalid');
+      }, true);
+
+      /* method radios */
+      var mrs = bySel('input[name="method"]');
+      for (var a = 0; a < mrs.length; a++){
+        mrs[a].addEventListener('change', function(e){ setMethod(e.target.value); });
+      }
+
+      /* cash type radios */
+      var crs = bySel('input[name="cashType"]');
+      for (var b = 0; b < crs.length; b++){
+        crs[b].addEventListener('change', function(e){
+          var isPos = e.target.value === 'کارت‌خوان';
+          byId('posWrap').hidden = !isPos;
+          if (!isPos) byId('posTracking').value = '';
+          var chips = bySel('#cashChips .chip');
+          for (var c = 0; c < chips.length; c++){
+            chips[c].classList.toggle('active', chips[c].contains(e.target));
+          }
+          updateSummary();
+        });
+      }
+
+      /* amount input */
+      byId('amount').addEventListener('input', function(e){
+        var raw = digitsOnly(e.target.value);
+        if (raw){
+          var num = Number(raw);
+          var s = String(num);
+          var f = '', cnt = 0;
+          for (var i = s.length - 1; i >= 0; i--){
+            f = s.charAt(i) + f;
+            cnt++;
+            if (cnt % 3 === 0 && i > 0) f = ',' + f;
+          }
+          e.target.value = toFa(f);
+        } else {
+          e.target.value = '';
+        }
+        updateWords();
+        updateSummary();
+      });
+
+      /* debtor change */
+      byId('debtor').addEventListener('change', updateSummary);
+
+      /* submit */
+      byId('receiveForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        var errors = validate();
+        if (errors.length > 0){
+          toast(errors[0], 'err');
+          var first = document.querySelector('.invalid');
+          if (first){ try { first.focus(); first.scrollIntoView(); } catch(_){} }
+          return;
+        }
+
+        var debtor = getCurrentDebtor();
+        var amount = getAmount();
+        var docNo = 'RC-1403-' + pad4(nextDocNumber);
+        nextDocNumber++;
+        refreshDocNo();
+
+        var desc = byId('desc').value.trim();
+        var detail = buildDetail();
+        if (desc){
+          detail += '<div style="font-size:11.5px;color:#9aa2b7;margin-top:3px">' + escapeHtml(desc) + '</div>';
+        }
+
+        var tbody = byId('tbody');
+        var emptyRow = tbody.querySelector('.empty-row');
+        if (emptyRow) emptyRow.parentNode.removeChild(emptyRow);
+
+        var tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td style="direction:ltr;text-align:right;font-weight:600">' + docNo + '</td>' +
+          '<td>' + toFa(byId('docDate').value || '—') + '</td>' +
+          '<td>' + escapeHtml(debtor.name) + '</td>' +
+          '<td><span class="tag">' + methodLabel() + '</span></td>' +
+          '<td style="color:#5b6480;font-size:12.5px">' + detail + '</td>' +
+          '<td class="money">' + fmt(amount) + '</td>' +
+          '<td><button type="button" class="btn btn-ghost" style="padding:5px 12px;font-size:12px" data-del>حذف</button></td>';
+
+        tr.querySelector('[data-del]').addEventListener('click', function(){
+          tr.parentNode.removeChild(tr);
+          rowCount--;
+          updateListCount();
+          if (rowCount === 0){
+            tbody.innerHTML = '<tr class="empty-row"><td colspan="7">هنوز سندی ثبت نشده است.</td></tr>';
+          }
+        });
+
+        tbody.appendChild(tr);
+        rowCount++;
+        updateListCount();
+
+        debtor.balance = Math.max(0, debtor.balance - amount);
+        renderDebtors(byId('debtor').value);
+
+        toast('سند ' + docNo + ' با موفقیت ثبت شد.', 'ok');
+        clearEntryFields();
+      });
+
+      /* reset */
+      byId('resetBtn').addEventListener('click', function(){
+        var m = document.querySelector('input[name="method"][value="cash"]');
+        if (m) m.checked = true;
+        setMethod('cash');
+
+        var ct = document.querySelector('input[name="cashType"][value="صندوق"]');
+        if (ct) ct.checked = true;
+        byId('posWrap').hidden = true;
+        var chips = bySel('#cashChips .chip');
+        for (var i = 0; i < chips.length; i++) chips[i].classList.toggle('active', i === 0);
+
+        byId('debtor').value = '';
+        byId('docDate').value = DEFAULT_DATE;
+        clearEntryFields();
+        refreshDocNo();
+        toast('فرم پاک‌سازی شد.', 'ok');
+      });
+    }
+
+    init();
+    diag('✓ آماده', true);
+    console.log('✓ Account receipt form loaded successfully');
+
+  } catch (err){
+    diag('✗ ' + (err && err.message ? err.message : 'خطای نامشخص'), false);
+    if (window.console && console.error) console.error('Init error:', err);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+const {DataTypes}=require('sequelize');
+module.exports=s=>s.define('TrainingCourse',{id:{type:DataTypes.UUID,primaryKey:true,defaultValue:DataTypes.UUIDV4},code:{type:DataTypes.STRING(40),allowNull:false,unique:true},title:{type:DataTypes.STRING(150),allowNull:false},provider:{type:DataTypes.STRING(150)},start_date:{type:DataTypes.DATEONLY},end_date:{type:DataTypes.DATEONLY},description:{type:DataTypes.TEXT},is_active:{type:DataTypes.TINYINT,allowNull:false,defaultValue:1}},{tableName:'hr_training_courses'});

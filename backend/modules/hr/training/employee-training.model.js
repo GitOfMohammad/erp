@@ -1,0 +1,2 @@
+const {DataTypes}=require('sequelize');
+module.exports=s=>s.define('EmployeeTraining',{id:{type:DataTypes.UUID,primaryKey:true,defaultValue:DataTypes.UUIDV4},employee_id:{type:DataTypes.UUID,allowNull:false},training_id:{type:DataTypes.UUID,allowNull:false},status:{type:DataTypes.ENUM('ENROLLED','COMPLETED','FAILED','CANCELLED'),allowNull:false,defaultValue:'ENROLLED'},result_note:{type:DataTypes.STRING(500)},completed_at:{type:DataTypes.DATE}},{tableName:'hr_employee_trainings',indexes:[{unique:true,fields:['employee_id','training_id']}]});

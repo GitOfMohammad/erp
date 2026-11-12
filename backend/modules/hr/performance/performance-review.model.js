@@ -1,0 +1,2 @@
+const {DataTypes}=require('sequelize');
+module.exports=s=>s.define('PerformanceReview',{id:{type:DataTypes.UUID,primaryKey:true,defaultValue:DataTypes.UUIDV4},employee_id:{type:DataTypes.UUID,allowNull:false},reviewer_id:{type:DataTypes.UUID,allowNull:false},period_start:{type:DataTypes.DATEONLY,allowNull:false},period_end:{type:DataTypes.DATEONLY,allowNull:false},rating:{type:DataTypes.TINYINT,allowNull:false},strengths:{type:DataTypes.TEXT},improvement_areas:{type:DataTypes.TEXT},goals:{type:DataTypes.TEXT}},{tableName:'hr_performance_reviews'});

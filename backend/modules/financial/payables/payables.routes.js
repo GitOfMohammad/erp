@@ -1,0 +1,13 @@
+'use strict';
+const { Router } = require('express');
+const permit = require('../../../core/middlewares/authorization');
+const validate = require('../../../core/middlewares/schemaValidator');
+const id = require('../../../core/middlewares/idValidator');
+const v = require('./payables.validator');
+const c = require('./payables.controller');
+const r = Router();
+r.get('/', permit('financial.payables.read'), validate(v.list, 'query'), c.list);
+r.get('/:sourceType/:sourceId', permit('financial.payables.read'), validate(v.sourceParams, 'params'), c.get);
+r.post('/:sourceType/:sourceId/settlements', permit('financial.payables.settle'), validate(v.sourceParams, 'params'), validate(v.createSettlement), c.settle);
+r.post('/settlements/:settlementId/reverse', permit('financial.payables.reverse'), id('settlementId'), validate(v.reverseSettlement), c.reverse);
+module.exports = r;

@@ -1,0 +1,20 @@
+const { DataTypes } = require('sequelize');
+module.exports = (sequelize) => sequelize.define('TreasuryAccount', {
+  id: { type: DataTypes.UUID, primaryKey: true, allowNull: false, defaultValue: DataTypes.UUIDV4 },
+  code: { type: DataTypes.STRING(30), allowNull: false, unique: true },
+  name: { type: DataTypes.STRING(150), allowNull: false },
+  description: { type: DataTypes.TEXT, allowNull: true },
+  account_type: { type: DataTypes.STRING(16), allowNull: false, validate: { isIn: [['CASH', 'BANK', 'PETTY_CASH']] } },
+  financial_account_id: { type: DataTypes.UUID, allowNull: false, unique: true },
+  bank_name: { type: DataTypes.STRING(100), allowNull: true },
+  branch_name: { type: DataTypes.STRING(100), allowNull: true },
+  branch_code: { type: DataTypes.STRING(20), allowNull: true },
+  bank_address: { type: DataTypes.STRING(300), allowNull: true },
+  bank_phone: { type: DataTypes.STRING(30), allowNull: true },
+  account_number: { type: DataTypes.STRING(50), allowNull: true },
+  card_number: { type: DataTypes.STRING(19), allowNull: true },
+  iban: { type: DataTypes.STRING(34), allowNull: true },
+  custodian_name: { type: DataTypes.STRING(150), allowNull: true },
+  limit_amount: { type: DataTypes.DECIMAL(18, 0), allowNull: true },
+  is_active: { type: DataTypes.TINYINT, allowNull: false, defaultValue: 1, validate: { isIn: [[0, 1]] } },
+}, { tableName: 'treasury_accounts' });

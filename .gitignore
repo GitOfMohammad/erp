@@ -1,0 +1,13 @@
+**/node_modules/
+.env
+**/.env
+!**/.env.example
+*.log
+**/logs/**
+backend/uploads/images/*
+!backend/uploads/images/.gitkeep
+backend/uploads/files/*
+!backend/uploads/files/.gitkeep
+coverage/
+dist/
+dev-dist/

@@ -1,0 +1,10 @@
+'use strict';
+const Joi = require('joi');
+const amount = Joi.string().pattern(/^[1-9][0-9]{0,17}$/);
+const date = Joi.date().iso();
+const sourceTypes = ['FIXED_ASSET_ACQUISITION', 'PROJECT_EXPENSE', 'PRODUCTION_ORDER_COST'];
+const list = Joi.object({ page: Joi.number().integer().min(1).default(1), limit: Joi.number().integer().min(1).max(100).default(20), sourceType: Joi.string().valid(...sourceTypes), openOnly: Joi.boolean().default(true) }).required();
+const sourceParams = Joi.object({ sourceType: Joi.string().valid(...sourceTypes).required(), sourceId: Joi.string().uuid().required() }).required();
+const createSettlement = Joi.object({ amount: amount.required(), treasuryAccountId: Joi.string().uuid().required(), method: Joi.string().valid('CASH', 'BANK_TRANSFER', 'CHEQUE').required(), paidAt: date.default(() => new Date()), reference: Joi.string().trim().max(100).allow('', null), note: Joi.string().trim().max(2000).allow('', null) }).required();
+const reverseSettlement = Joi.object({ reason: Joi.string().trim().min(2).max(500).required(), paidAt: date.default(() => new Date()), reference: Joi.string().trim().max(100).allow('', null) }).required();
+module.exports = { list, sourceParams, createSettlement, reverseSettlement };

@@ -1,0 +1,2 @@
+const {DataTypes}=require('sequelize');
+module.exports=s=>s.define('CrmSupportMessage',{id:{type:DataTypes.UUID,primaryKey:true,allowNull:false,defaultValue:DataTypes.UUIDV4},ticket_id:{type:DataTypes.UUID,allowNull:false},author_id:{type:DataTypes.UUID,allowNull:false},body:{type:DataTypes.TEXT,allowNull:false},is_internal:{type:DataTypes.TINYINT,allowNull:false,defaultValue:0}},{tableName:'crm_support_messages'});

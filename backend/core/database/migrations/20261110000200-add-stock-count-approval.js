@@ -1,0 +1,2 @@
+'use strict'
+module.exports={async up(q,S){await q.addColumn('stock_counts','status',{type:S.ENUM('PENDING_APPROVAL','APPROVED'),allowNull:false,defaultValue:'APPROVED'});await q.addColumn('stock_counts','approved_by',{type:S.UUID,allowNull:true,references:{model:'users',key:'id'},onDelete:'SET NULL',onUpdate:'CASCADE'});await q.addColumn('stock_counts','approved_at',{type:S.DATE,allowNull:true})},async down(q){await q.removeColumn('stock_counts','approved_at');await q.removeColumn('stock_counts','approved_by');await q.removeColumn('stock_counts','status')}}

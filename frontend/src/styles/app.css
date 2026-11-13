@@ -202,6 +202,13 @@ svg {
     opacity: .7
 }
 
+.log-dashboard-nav-link {
+    margin-top: 14px !important;
+    padding-top: 13px !important;
+    border-top: 1px solid #334652 !important;
+    border-radius: 0 !important
+}
+
 .sidebar-bottom {
     margin-top: auto
 }
@@ -2390,6 +2397,42 @@ td {
 
 .assignment-field {
     padding: 20px 0
+}
+
+.permission-search {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 16px;
+    padding: 0 12px;
+    height: 40px;
+    color: var(--muted);
+    background: var(--surface-2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+}
+
+.permission-search:focus-within {
+    border-color: var(--primary);
+}
+
+.permission-search input {
+    width: 100%;
+    min-width: 0;
+    color: var(--text);
+    background: transparent;
+    border: 0;
+    outline: 0;
+    font: inherit;
+    font-size: 12px;
+}
+
+.permission-search-empty {
+    grid-column: 1 / -1;
+    padding: 18px;
+    color: var(--muted);
+    text-align: center;
+    font-size: 12px;
 }
 
 .permission-checklist {

@@ -10,6 +10,7 @@ const SecuritySetting = require('../../../modules/settings/security-setting.mode
 const PrintSetting = require('../../../modules/settings/print-setting.model')(sequelize);
 const MoadianSetting = require('../../../modules/settings/moadian-setting.model')(sequelize);
 const SecurityEvent = require('../../../modules/auth/security-event.model')(sequelize);
+const SystemLog = require('../../../modules/monitoring/system-log.model')(sequelize);
 const Role = require('../../../modules/auth/roles/role.model')(sequelize);
 const Permission = require('../../../modules/auth/permissions/permission.model')(sequelize);
 const UserRole = require('../../../modules/auth/user-roles/user-role.model')(sequelize);
@@ -62,7 +63,7 @@ const CrmSupportTicket = require('../../../modules/crm/support/support-ticket.mo
 const CrmSupportMessage = require('../../../modules/crm/support/support-message.model')(sequelize);
 const CrmContract = require('../../../modules/crm/contracts/crm-contract.model')(sequelize);
 
-const models = { User, CompanySetting, TaxSetting, FinanceSetting, InventorySetting, SecuritySetting, SecurityEvent, PrintSetting, MoadianSetting, Role, Permission, UserRole, RolePermission, RefreshSession, Product, Category, ProductCategory, ProductImage, Warehouse, StockBalance, StockMovement, StockTransfer, StockTransferItem, StockCount, StockCountItem, CommercialDocument, CommercialDocumentItem, CommercialPartner, CommercialSettlement, SalesRepresentative, PayableSettlement, FinancialAccount, JournalEntry, JournalLine, FiscalYear, BankReconciliation, BankReconciliationLine, TreasuryAccount, TreasuryTransfer, CashVoucher, CustomerCheque, CompanyCheckbook, CompanyCheque, DirectPartnerSettlement, DirectPartnerSettlementAllocation, Department, Position, Employee, HrShift, ShiftAssignment, AttendanceRecord, LeaveRequest, PayrollEntry, PerformanceReview, TrainingCourse, EmployeeTraining, CrmLead, CrmInteraction, CrmSupportTicket, CrmSupportMessage, CrmContract };
+const models = { User, CompanySetting, TaxSetting, FinanceSetting, InventorySetting, SecuritySetting, SecurityEvent, SystemLog, PrintSetting, MoadianSetting, Role, Permission, UserRole, RolePermission, RefreshSession, Product, Category, ProductCategory, ProductImage, Warehouse, StockBalance, StockMovement, StockTransfer, StockTransferItem, StockCount, StockCountItem, CommercialDocument, CommercialDocumentItem, CommercialPartner, CommercialSettlement, SalesRepresentative, PayableSettlement, FinancialAccount, JournalEntry, JournalLine, FiscalYear, BankReconciliation, BankReconciliationLine, TreasuryAccount, TreasuryTransfer, CashVoucher, CustomerCheque, CompanyCheckbook, CompanyCheque, DirectPartnerSettlement, DirectPartnerSettlementAllocation, Department, Position, Employee, HrShift, ShiftAssignment, AttendanceRecord, LeaveRequest, PayrollEntry, PerformanceReview, TrainingCourse, EmployeeTraining, CrmLead, CrmInteraction, CrmSupportTicket, CrmSupportMessage, CrmContract };
 
 //! =============== Relations ===============
 

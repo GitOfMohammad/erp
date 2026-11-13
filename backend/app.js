@@ -7,6 +7,7 @@ const { rateLimit } = require('express-rate-limit');
 const env = require('./core/config/env');
 const swaggerDocument = require('./core/config/swagger');
 const logger = require('./core/middlewares/logger');
+const systemRequestLogger = require('./core/middlewares/systemRequestLogger');
 const ResponseApi = require('./core/api/ResponseApi');
 const notFoundHandler = require('./core/middlewares/notFoundHandler');
 const globalErrorHandler = require('./core/middlewares/globalErrorHandler');
@@ -30,6 +31,7 @@ app.use(helmet());
 app.use(cors({ origin: env.cors.origin, credentials: env.cors.origin !== '*' }));
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
+app.use(systemRequestLogger(env.api.prefix));
 // Publicly serve images only; documents and PDFs require protected routes.
 app.use('/uploads/images', express.static(require('node:path').join(env.uploads.directory, 'images'), { fallthrough: false }));
 // Keep a generous shared API ceiling for ordinary multi-query SPA navigation.

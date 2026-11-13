@@ -29,7 +29,7 @@ async function create(req, res) {
 }
 
 async function update(req, res) {
-  const user = await service.update(req.params.id, req.validated.body, { ipAddress: req.ip, userAgent: req.get('user-agent'), actorUsername: req.user.username });
+  const user = await service.update(req.params.id, req.validated.body, { actorUserId: req.user.id, ipAddress: req.ip, userAgent: req.get('user-agent'), actorUsername: req.user.username });
    ResponseApi.ok(res, {
     type: 'USER_UPDATED',
     message: 'کاربر ویرایش شد',

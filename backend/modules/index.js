@@ -17,6 +17,7 @@ router.use('/financial/budgets', require('./budgeting/budgeting.routes'));
 router.use('/projects', require('./project/project.routes'));
 router.use('/scm', require('./scm/scm.routes'));
 router.use('/settings', require('./settings/settings.routes'));
+router.use('/logs', require('./monitoring/logs.routes'));
 
 module.exports = router;
 

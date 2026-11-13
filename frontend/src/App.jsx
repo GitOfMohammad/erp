@@ -32,6 +32,7 @@ const NotFoundPage = lazy(() => import('./pages/NotFoundPage'))
 const VendorUpdatesPage = lazy(() => import('./pages/VendorUpdatesPage'))
 const ShipmentsPage = lazy(() => import('./pages/ShipmentsPage'))
 const SettingsPage = lazy(() => import('./pages/SettingsPage'))
+const LogDashboardPage = lazy(() => import('./pages/LogDashboardPage'))
 function Guard({ children }) {
   const session = useSelector((s) => s.session)
   const location = useLocation()
@@ -53,6 +54,7 @@ export default function App() {
       <Route path="/" element={<Guard><AppLayout theme={theme} toggleTheme={toggleTheme} /></Guard>}>
         <Route index element={<DashboardPage />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="log-dashboard" element={<LogDashboardPage />} />
         {resources.map((resource) => <Route key={resource.slug} path={resource.slug} element={resource.slug === 'vendor-updates' ? <VendorUpdatesPage /> : resource.slug === 'shipments' ? <ShipmentsPage /> : resource.group === 'hr' ? <HrPage resource={resource} /> : resource.group === 'projects' ? <ProjectsPage resource={resource} /> : resource.group === 'production' ? <ProductionPage resource={resource} /> : resource.slug === 'purchase-orders' ? <PurchaseOrdersPage resource={resource} /> : resource.slug === 'purchase-invoices' ? <PurchaseInvoicesPage resource={resource} /> : resource.slug === 'purchase-returns' ? <PurchaseReturnsPage resource={resource} /> : resource.slug === 'sales-orders' ? <SalesOrdersPage resource={resource} /> : resource.slug === 'sales-invoices' ? <SalesInvoicesPage resource={resource} /> : resource.slug === 'sales-returns' ? <SalesReturnsPage resource={resource} /> : resource.slug === 'cash-vouchers' ? <CashVouchersPage /> : resource.slug === 'company-checkbooks' ? <CompanyCheckbooksPage /> : resource.slug === 'journal-accounts' ? <FinancialAccountsPage /> : resource.slug === 'budgets' ? <BudgetsPage /> : resource.slug === 'leads' ? <LeadsPage /> : ['interactions', 'support-tickets', 'contracts'].includes(resource.slug) ? <CrmPages resource={resource} /> : resource.slug === 'financial-reports' ? <FinancialReportsPage /> : resource.slug === 'bank-reconciliation' ? <BankReconciliationPage /> : <ResourcePage resource={resource} />} />)}
         <Route path="receipts" element={<Navigate to="/cash-vouchers?tab=receipt" replace />} />
         <Route path="payments" element={<Navigate to="/cash-vouchers?tab=payment" replace />} />

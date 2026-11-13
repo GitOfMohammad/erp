@@ -80,6 +80,9 @@ async function update(id, data, meta = {}) {
 
   const activeStatusChanged = Object.hasOwn(updateData, 'isactive')
     && Number(updateData.isactive) !== Number(currentUser.isactive);
+  if (activeStatusChanged && Number(updateData.isactive) !== 1 && String(id) === String(meta.actorUserId)) {
+    throw ErrorApi.conflict('نمی‌توانید حساب کاربری فعلی خود را غیرفعال کنید');
+  }
 
   const updatedUser = await sequelize.transaction(async (transaction) => {
     const user = await repository.updateById(id, updateData, { transaction });
@@ -96,7 +99,7 @@ async function update(id, data, meta = {}) {
   });
 
   if (passwordChanged) await security.recordEvent({ eventType: 'ADMIN_PASSWORD_RESET', userId: id, username: updatedUser.username, ipAddress: meta.ipAddress, userAgent: meta.userAgent, details: `تغییر توسط مدیر ${meta.actorUsername || ''}` });
-  if (activeStatusChanged && Number(updatedUser.isactive) !== 1) await security.recordEvent({ eventType: 'USER_DISABLED', userId: id, username: updatedUser.username, ipAddress: meta.ipAddress, userAgent: meta.userAgent, details: `غیرفعال‌سازی توسط مدیر ${meta.actorUsername || ''}` });
+  if (activeStatusChanged) await security.recordEvent({ eventType: Number(updatedUser.isactive) === 1 ? 'USER_ENABLED' : 'USER_DISABLED', userId: id, username: updatedUser.username, ipAddress: meta.ipAddress, userAgent: meta.userAgent, details: `${Number(updatedUser.isactive) === 1 ? 'فعال‌سازی' : 'غیرفعال‌سازی'} توسط مدیر ${meta.actorUsername || ''}` });
 
   return toPublicUser(updatedUser);
 }

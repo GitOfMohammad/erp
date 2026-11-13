@@ -198,7 +198,7 @@ function SecuritySettings() {
   if (query.isError) return <div className="error-state"><FiInfo/><strong>دریافت تنظیمات امنیتی انجام نشد</strong><span>{getErrorMessage(query.error)}</span><button type="button" className="btn btn-secondary" onClick={() => query.refetch()}>تلاش دوباره</button></div>
   const events = query.data?.events || []
   const submit = event => { event.preventDefault(); mutation.mutate({ ...settings, minimumPasswordLength: Number(settings.minimumPasswordLength), sessionDurationHours: Number(settings.sessionDurationHours), eventRetentionDays: Number(settings.eventRetentionDays) }) }
-  const eventLabels = { LOGIN_SUCCESS: 'ورود موفق', LOGIN_FAILED: 'تلاش ورود ناموفق', LOGOUT: 'خروج', PASSWORD_CHANGED: 'تغییر رمز عبور', ADMIN_PASSWORD_RESET: 'بازنشانی رمز توسط مدیر', USER_DISABLED: 'غیرفعال‌شدن کاربر', USER_ROLE_CHANGED: 'تغییر نقش کاربر' }
+  const eventLabels = { LOGIN_SUCCESS: 'ورود موفق', LOGIN_FAILED: 'تلاش ورود ناموفق', LOGOUT: 'خروج', PASSWORD_CHANGED: 'تغییر رمز عبور', ADMIN_PASSWORD_RESET: 'بازنشانی رمز توسط مدیر', USER_DISABLED: 'غیرفعال‌شدن کاربر', USER_ENABLED: 'فعال‌شدن کاربر', USER_ROLE_CHANGED: 'تغییر نقش کاربر' }
   const sessionOptions = [{ id: 8, label: '۸ ساعت' }, { id: 24, label: '۲۴ ساعت' }, { id: 72, label: '۳ روز' }, { id: 168, label: '۷ روز' }]
   const lengthOptions = [8, 10, 12, 14].map(value => ({ id: value, label: `${new Intl.NumberFormat('fa-IR').format(value)} نویسه` }))
   const retentionOptions = [{ id: 30, label: '۳۰ روز' }, { id: 90, label: '۹۰ روز' }, { id: 180, label: '۱۸۰ روز' }]

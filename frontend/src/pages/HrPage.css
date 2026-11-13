@@ -1,2 +1,408 @@
-.hr-page{color:var(--text-primary,#eaf2f7)}.hr-page .page-heading{margin-bottom:20px}.hr-summary{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;margin-bottom:18px;border:1px solid var(--border-color,#293b49);border-radius:14px;background:var(--card-bg,#192832)}.hr-summary-content{display:flex;align-items:center;gap:14px}.hr-summary-icon{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;background:rgba(52,195,157,.14);color:#34c39d;font-size:21px}.hr-summary strong,.hr-summary small{display:block}.hr-summary strong{font-size:20px}.hr-summary small{margin-top:3px;color:var(--text-muted,#8da3b4)}.hr-table-card{overflow:hidden;border:1px solid var(--border-color,#293b49);border-radius:14px;background:var(--card-bg,#192832)}.hr-table-tools{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border-color,#293b49)}.hr-table-tools>input{width:min(320px,100%);height:40px;padding:0 12px;border:1px solid var(--border-color,#344957);border-radius:8px;background:var(--input-bg,#17242d);color:inherit}.hr-tabs{display:flex;gap:6px}.hr-tabs button{padding:8px 12px;border:0;border-radius:8px;background:transparent;color:var(--text-muted,#9aabba);cursor:pointer}.hr-tabs button.selected{background:rgba(52,195,157,.13);color:#46cba7}.hr-table-wrap{overflow:auto}.hr-table-wrap table{width:100%;border-collapse:collapse;white-space:nowrap}.hr-table-wrap th,.hr-table-wrap td{padding:13px 16px;text-align:right;border-bottom:1px solid rgba(131,157,174,.14);font-size:13px}.hr-table-wrap th{color:#9db0bd;font-weight:600;background:rgba(255,255,255,.015)}.hr-table-wrap td{color:#e0e8ed}.hr-state{display:inline-flex;padding:4px 9px;border-radius:99px;background:rgba(52,195,157,.12);color:#50d0aa;font-size:11px}.hr-row-actions{display:flex;align-items:center;gap:5px}.hr-row-actions button{display:inline-flex;align-items:center;gap:5px;min-height:30px;padding:5px 8px;border:1px solid var(--border-color,#344957);border-radius:7px;background:transparent;color:#b8c8d2;cursor:pointer}.hr-row-actions button:hover{color:#46cba7;border-color:#46cba7}.hr-row-actions button.danger{color:#f28b8b}.hr-empty{text-align:center!important;padding:38px!important;color:#91a5b4!important}.hr-loading{padding:36px;text-align:center;color:#9bb0bd}.hr-footer{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;color:#9aabba;font-size:12px}.hr-footer>div{display:flex;align-items:center;gap:12px}.hr-footer button{padding:6px 12px;border:1px solid var(--border-color,#344957);border-radius:7px;background:transparent;color:inherit;cursor:pointer}.hr-footer button:disabled{opacity:.45;cursor:not-allowed}.hr-modal-backdrop{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:22px;background:rgba(4,12,18,.72)}.hr-modal{width:min(760px,100%);max-height:90vh;overflow:auto;padding:22px;border:1px solid var(--border-color,#354957);border-radius:16px;background:var(--surface,#192832);box-shadow:0 24px 90px rgba(0,0,0,.4)}.hr-modal-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}.hr-modal-head span{font-size:12px;color:#43cba5}.hr-modal-head h2{margin:5px 0 0;font-size:20px}.hr-modal-head>button{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--border-color,#354957);border-radius:8px;background:transparent;color:inherit;cursor:pointer}.hr-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.hr-form-grid label{display:flex;flex-direction:column;gap:7px;min-width:0}.hr-form-grid label.wide{grid-column:1/-1}.hr-form-grid label>span{font-size:12px;color:#adbec9}.hr-form-grid input,.hr-form-grid select,.hr-form-grid textarea{width:100%;min-height:40px;padding:9px 11px;border:1px solid var(--border-color,#354957);border-radius:8px;background:var(--input-bg,#14232c);color:inherit;font:inherit}.hr-form-grid textarea{resize:vertical}.hr-form-grid input:focus,.hr-form-grid select:focus,.hr-form-grid textarea:focus{outline:1px solid #36bf9b;border-color:#36bf9b}.hr-form-grid label>div{width:100%}.hr-form-grid .hr-datetime-field{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(110px,1fr);gap:8px}.hr-form-grid label>div>.rmdp-container{width:100%}.hr-form-grid label>div>.rmdp-container input.form-control{width:100%;min-height:40px;padding:9px 11px;border:1px solid var(--border-color,#354957);border-radius:8px;background:var(--input-bg,#14232c);color:inherit;font:inherit}.hr-form-foot{display:flex;justify-content:flex-start;gap:9px;margin-top:20px;padding-top:16px;border-top:1px solid rgba(131,157,174,.14)}@media(max-width:700px){.hr-table-tools{align-items:stretch;flex-direction:column}.hr-table-tools>input{width:100%}.hr-summary{padding:14px}.hr-form-grid{grid-template-columns:1fr}.hr-form-grid label.wide{grid-column:auto}.hr-footer{align-items:flex-start;gap:12px;flex-direction:column}}
-.hr-payment-note{margin:-6px 0 18px;padding:12px 14px;border:1px solid rgba(52,195,157,.25);border-radius:9px;background:rgba(52,195,157,.08);color:#b5d7cb;font-size:13px;line-height:1.9}.hr-payroll-net{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:9px;background:rgba(255,255,255,.035);color:#aabcc8}.hr-payroll-net strong{color:#45cba5;font-variant-numeric:tabular-nums}.hr-form-grid label>small{color:#f0aa8b;font-size:11px;line-height:1.7}@media(max-width:700px){.hr-payroll-net{grid-column:auto}}
+.hr-page {
+  color: var(--text);
+}
+
+.hr-page .page-heading {
+  margin-bottom: 20px;
+}
+
+.hr-summary,
+.hr-table-card {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.hr-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  margin-bottom: 18px;
+}
+
+.hr-summary-content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.hr-summary-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--primary) 13%, var(--surface));
+  color: var(--primary-dark);
+  font-size: 21px;
+}
+
+.hr-summary strong,
+.hr-summary small {
+  display: block;
+}
+
+.hr-summary strong {
+  font-size: 20px;
+}
+
+.hr-summary small,
+.hr-footer {
+  color: var(--muted);
+}
+
+.hr-summary small {
+  margin-top: 3px;
+}
+
+.hr-table-card {
+  overflow: hidden;
+}
+
+.hr-table-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.hr-table-tools > input {
+  width: min(320px, 100%);
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.hr-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.hr-tabs button {
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.hr-tabs button.selected {
+  background: color-mix(in srgb, var(--primary) 13%, var(--surface));
+  color: var(--primary-dark);
+}
+
+.hr-table-wrap {
+  overflow: auto;
+}
+
+.hr-table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap;
+}
+
+.hr-table-wrap th,
+.hr-table-wrap td {
+  padding: 13px 16px;
+  text-align: right;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.hr-table-wrap th {
+  color: var(--muted);
+  font-weight: 600;
+  background: var(--surface-2);
+}
+
+.hr-table-wrap td {
+  color: var(--text);
+}
+
+.hr-state {
+  display: inline-flex;
+  padding: 4px 9px;
+  border-radius: 99px;
+  background: color-mix(in srgb, var(--primary) 13%, var(--surface));
+  color: var(--primary-dark);
+  font-size: 11px;
+}
+
+.hr-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.hr-row-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 30px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.hr-row-actions button:hover {
+  color: var(--primary-dark);
+  border-color: var(--primary);
+}
+
+.hr-row-actions button.danger {
+  color: #b4232f;
+}
+
+:root[data-theme="dark"] .hr-row-actions button.danger {
+  color: #ff8e92;
+}
+
+.hr-empty,
+.hr-loading {
+  color: var(--muted);
+  text-align: center;
+}
+
+.hr-empty {
+  padding: 38px !important;
+}
+
+.hr-loading {
+  padding: 36px;
+}
+
+.hr-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  font-size: 12px;
+}
+
+.hr-footer > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hr-footer button {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.hr-footer button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.hr-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 22px;
+  background: rgba(4, 12, 18, .72);
+}
+
+.hr-modal {
+  width: min(760px, 100%);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, .4);
+}
+
+.hr-modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.hr-modal-head span {
+  color: var(--primary-dark);
+  font-size: 12px;
+}
+
+.hr-modal-head h2 {
+  margin: 5px 0 0;
+  font-size: 20px;
+}
+
+.hr-modal-head > button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.hr-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.hr-form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+
+.hr-form-grid label.wide {
+  grid-column: 1 / -1;
+}
+
+.hr-form-grid label > span {
+  color: var(--text);
+  font-size: 12px;
+}
+
+.hr-form-grid input,
+.hr-form-grid select,
+.hr-form-grid textarea {
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+}
+
+.hr-form-grid textarea {
+  resize: vertical;
+}
+
+.hr-form-grid input:focus,
+.hr-form-grid select:focus,
+.hr-form-grid textarea:focus {
+  outline: 1px solid var(--primary);
+  border-color: var(--primary);
+}
+
+.hr-form-grid label > div {
+  width: 100%;
+}
+
+.hr-form-grid .hr-datetime-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(110px, 1fr);
+  gap: 8px;
+}
+
+.hr-form-grid label > div > .rmdp-container {
+  width: 100%;
+}
+
+.hr-form-grid label > div > .rmdp-container input.form-control {
+  width: 100%;
+  min-height: 40px;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+}
+
+.hr-form-foot {
+  display: flex;
+  justify-content: flex-start;
+  gap: 9px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.hr-payment-note {
+  margin: -6px 0 18px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--line));
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--primary) 8%, var(--surface));
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.hr-payroll-net {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 9px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.hr-payroll-net strong {
+  color: var(--primary-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.hr-form-grid label > small {
+  color: #a33d1d;
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+:root[data-theme="dark"] .hr-form-grid label > small {
+  color: #f0aa8b;
+}
+
+@media (max-width: 700px) {
+  .hr-table-tools {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .hr-table-tools > input {
+    width: 100%;
+  }
+
+  .hr-summary {
+    padding: 14px;
+  }
+
+  .hr-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hr-form-grid label.wide,
+  .hr-payroll-net {
+    grid-column: auto;
+  }
+
+  .hr-footer {
+    align-items: flex-start;
+    gap: 12px;
+    flex-direction: column;
+  }
+}

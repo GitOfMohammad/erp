@@ -11,7 +11,6 @@ import { resources } from '../utils/resources'
 const iconMap = { FiGrid, FiUsers, FiPackage, FiArchive, FiShoppingBag, FiCreditCard, FiBriefcase, FiActivity, FiLayers, FiShield, FiBox, FiBarChart2, FiSettings, FiClock, FiCalendar, FiDollarSign, FiBookOpen, FiGitBranch, FiCheckCircle, FiTruck, FiFileText, FiPrinter }
 const groups = [
   { title: 'نمای کلی', icon: FiGrid, slugs: [''] },
-  { title: 'مدیریت کاربران و دسترسی‌ها', icon: FiShield, slugs: ['users', 'roles', 'permissions'] },
   { title: 'حسابداری', icon: FiBookOpen, slugs: ['journal-accounts', 'journals', 'assets'] },
   { title: 'خرید', icon: FiShoppingBag, slugs: ['partners', 'purchase-orders', 'purchase-invoices', 'purchase-returns', 'vendor-updates'], labels: { partners: 'تأمین‌کنندگان' } },
   { title: 'فروش', icon: FiDollarSign, slugs: ['partners', 'sales-representatives', 'sales-orders', 'sales-invoices', 'sales-returns'], labels: { partners: 'مشتریان' } },
@@ -30,6 +29,7 @@ const groups = [
     { slug: 'settings', section: 'access', label: 'امنیت و دسترسی', icon: 'FiShield', permission: 'settings.security.read' },
     { slug: 'settings', section: 'print', label: 'چاپ و قالب اسناد', icon: 'FiPrinter', permission: 'settings.general.read' },
   ] },
+  { title: 'مدیریت کاربران و دسترسی‌ها', icon: FiShield, slugs: ['users', 'roles', 'permissions'] },
 ]
 const findResource = (slug) => slug === 'settings' ? { slug: 'settings', label: 'تنظیمات', icon: 'FiSettings', permission: ['settings.general.read', 'settings.tax.read', 'settings.finance.read'] } : resources.find((item) => item.slug === slug)
 const groupItems = (group) => (group.items || group.slugs.map((slug) => slug ? findResource(slug) : ({ slug: '', label: 'داشبورد', icon: 'FiGrid' })).filter(Boolean)).map((item) => group.labels?.[item.slug] ? { ...item, label: group.labels[item.slug] } : item)

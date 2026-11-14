@@ -16,7 +16,7 @@ const groups = [
   { title: 'فروش', icon: FiDollarSign, slugs: ['partners', 'sales-representatives', 'sales-orders', 'sales-invoices', 'sales-returns'], labels: { partners: 'مشتریان' } },
   { title: 'انبارداری', icon: FiArchive, slugs: ['products', 'categories', 'warehouses', 'inventory', 'movements', 'transfers', 'stock-counts', 'shipments'] },
   { title: 'خزانه‌داری', icon: FiCreditCard, slugs: ['treasury', 'cash-vouchers', 'company-checkbooks', 'bank-reconciliation', 'payables'] },
-  { title: 'منابع انسانی', icon: FiBriefcase, slugs: ['employees', 'departments', 'positions', 'shifts', 'shift-assignments', 'attendance', 'leaves', 'payroll', 'performance-reviews', 'trainings', 'training-enrollments'] },
+  { title: 'منابع انسانی', icon: FiBriefcase, slugs: ['hr-dashboard', 'employees', 'departments', 'positions', 'shifts', 'shift-assignments', 'attendance', 'leaves', 'payroll', 'performance-reviews', 'trainings', 'training-enrollments'] },
   { title: 'ارتباط با مشتری', icon: FiUsers, slugs: ['leads', 'interactions', 'support-tickets', 'contracts'], labels: { contracts: 'قراردادهای مشتریان' } },
   { title: 'تولید', icon: FiGitBranch, slugs: ['boms', 'production-orders', 'quality-checks'] },
   { title: 'گزارش‌گیری و تحلیل', icon: FiBarChart2, slugs: ['financial-reports', 'payables-balances', 'receivables-balances', 'budgets'] },
@@ -31,7 +31,7 @@ const groups = [
   ] },
   { title: 'مدیریت کاربران و دسترسی‌ها', icon: FiShield, slugs: ['users', 'roles', 'permissions'] },
 ]
-const findResource = (slug) => slug === 'settings' ? { slug: 'settings', label: 'تنظیمات', icon: 'FiSettings', permission: ['settings.general.read', 'settings.tax.read', 'settings.finance.read'] } : resources.find((item) => item.slug === slug)
+const findResource = (slug) => slug === 'settings' ? { slug: 'settings', label: 'تنظیمات', icon: 'FiSettings', permission: ['settings.general.read', 'settings.tax.read', 'settings.finance.read'] } : slug === 'hr-dashboard' ? { slug, label: 'داشبورد منابع انسانی', icon: 'FiBarChart2', permission: 'hr.employees.read' } : resources.find((item) => item.slug === slug)
 const groupItems = (group) => (group.items || group.slugs.map((slug) => slug ? findResource(slug) : ({ slug: '', label: 'داشبورد', icon: 'FiGrid' })).filter(Boolean)).map((item) => group.labels?.[item.slug] ? { ...item, label: group.labels[item.slug] } : item)
 
 export default function AppLayout({ theme, toggleTheme }) {

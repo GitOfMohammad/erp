@@ -3109,6 +3109,7 @@ td {
 .searchable-select-menu-fixed {
     position: fixed;
     inset-inline: auto;
+    z-index: 1600;
 }
 
 .searchable-select-option {

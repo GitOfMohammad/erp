@@ -8,6 +8,8 @@ import { toast } from 'sonner'
 import { api, getErrorMessage, unwrap } from '../services/api'
 import FormattedNumberInput from '../components/FormattedNumberInput'
 import JalaliDateInput from '../components/JalaliDateInput'
+import DateObject from 'react-date-object'
+import persian from 'react-date-object/calendars/persian'
 import DataExportActions from '../components/DataExportActions'
 import { fetchAllPages } from '../utils/fetchAllPages'
 import './HrPage.css'
@@ -36,6 +38,7 @@ const dateFields=new Set(['work_date','start_date','end_date','period_start','pe
 const normalizeDigits=(value)=>String(value).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d))
 const numberText=(value)=>new Intl.NumberFormat('fa-IR').format(Number(normalizeDigits(value)||0))
 const jalaliDateText=(value,withTime=false)=>formatPersianDate(value,withTime)
+const jalaliToIso=(value)=>{const match=normalizeDigits(value).trim().match(/^(\d{4})[/-](\d{1,2})(?:[/-](\d{1,2}))?$/);if(!match)return '';const date=new DateObject({year:Number(match[1]),month:Number(match[2]),day:Number(match[3]||1),calendar:persian}).toDate();return Number.isNaN(date.getTime())?'':[date.getFullYear(),String(date.getMonth()+1).padStart(2,'0'),String(date.getDate()).padStart(2,'0')].join('-')}
 
 function HrDateField({name,type,initial,required,initialPeriodStartDate=''}) {
   const dateTime=type==='datetime'
@@ -79,7 +82,7 @@ export default function HrPage({resource}) {
     const items=await fetchAllPages(`${resource.endpoint}${params.size?`?${params}`:''}`)
     return items.map(toExportRow)
   }
-  const save=useMutation({mutationFn:async(payload)=>{if(!editing)return unwrap(await api.post(resource.endpoint,payload));const endpoint=resource.slug==='attendance'?`${resource.endpoint}/${editing.id}/manual`:`${resource.endpoint}/${editing.id}`;return unwrap(await api.patch(endpoint,payload))},onSuccess:()=>{toast.success(editing?'اطلاعات ویرایش شد':'اطلاعات ثبت شد');setModal(false);setEditing(null);qc.invalidateQueries({queryKey:['hr']});qc.invalidateQueries({queryKey:['hr-options']})},onError:e=>toast.error(getErrorMessage(e))})
+  const save=useMutation({mutationFn:async(payload)=>{if(!editing){const endpoint=resource.slug==='attendance'?`${resource.endpoint}/manual`:resource.endpoint;return unwrap(await api.post(endpoint,payload))}const endpoint=resource.slug==='attendance'?`${resource.endpoint}/${editing.id}/manual`:`${resource.endpoint}/${editing.id}`;return unwrap(await api.patch(endpoint,payload))},onSuccess:()=>{toast.success(editing?'اطلاعات ویرایش شد':'اطلاعات ثبت شد');setModal(false);setEditing(null);qc.invalidateQueries({queryKey:['hr']});qc.invalidateQueries({queryKey:['hr-options']})},onError:e=>toast.error(getErrorMessage(e))})
   const removeOrganizationRecord=useMutation({mutationFn:async row=>unwrap(await api.delete(`${resource.endpoint}/${row.id}`)),onSuccess:()=>{toast.success(resource.slug==='departments'?'دپارتمان حذف شد':'سمت حذف شد');qc.invalidateQueries({queryKey:['hr']});qc.invalidateQueries({queryKey:['hr-options']})},onError:e=>toast.error(getErrorMessage(e))})
   const action=useMutation({mutationFn:async({url,method='post',data={}})=>unwrap(await api[method](url,data)),onSuccess:()=>{toast.success('عملیات با موفقیت انجام شد');qc.invalidateQueries({queryKey:['hr']})},onError:e=>toast.error(getErrorMessage(e))})
   const registerPayment=useMutation({mutationFn:async(payload)=>unwrap(await api.patch(`/hr/payroll/${paymentRow.id}/pay`,payload)),onSuccess:()=>{toast.success('پرداخت انجام‌شده در دفتر ثبت شد');setPaymentRow(null);setPaymentAccountId('');qc.invalidateQueries({queryKey:['hr']})},onError:e=>toast.error(getErrorMessage(e))})
@@ -89,7 +92,7 @@ export default function HrPage({resource}) {
     if(resource.slug==='attendance'&&can('hr.attendance.self')){list.push(['ثبت ورود','/hr/attendance/check-in']);list.push(['ثبت خروج','/hr/attendance/check-out'])}
     return list
   },[resource.slug,user])
-  const onSubmit=(e)=>{e.preventDefault();const fd=new FormData(e.currentTarget), payload={};for(const [key,val] of fd.entries()){if(val===''||key.endsWith('__date')||key.endsWith('__time'))continue;const numeric=['number','breakMinutes','graceMinutes','rating','baseAmount','allowanceAmount','deductionAmount','isActive'].includes(key);payload[key]=numeric?Number(normalizeDigits(val).replace(/[,٬٫\s]/g,'')):val}if(resource.slug==='positions')payload.departmentId=departmentSelection||null
+  const onSubmit=(e)=>{e.preventDefault();const form=e.currentTarget,fd=new FormData(form),payload={};for(const [key,val] of fd.entries()){if(val===''||key.endsWith('__date')||key.endsWith('__time'))continue;const numeric=['number','breakMinutes','graceMinutes','rating','baseAmount','allowanceAmount','deductionAmount','isActive'].includes(key);payload[key]=numeric?Number(normalizeDigits(val).replace(/[,٬٫\s]/g,'')):val}for(const [name,label,type] of config.fields){if(!['date','month','datetime'].includes(type))continue;const field=Array.from(form.querySelectorAll('.hr-form-grid label')).find(item=>item.textContent.includes(label));const dateInput=field?.querySelector('.rmdp-input');const rawDate=dateInput?.value||'';if(!rawDate)continue;if(type==='date'&&!payload[name])payload[name]=jalaliToIso(rawDate);if(type==='month'&&!payload[name]){const normalized=normalizeDigits(rawDate).replace('/','-');payload[name]=normalized.slice(0,7);payload.periodStartDate=jalaliToIso(`${normalized.replace('-','/')}/01`)}if(type==='datetime'){const date=jalaliToIso(rawDate),time=field?.querySelector('input[type="time"]')?.value||'00:00';if(date)payload[name]=new Date(`${date}T${time}:00`).toISOString()}}if(resource.slug==='positions')payload.departmentId=departmentSelection||null
     for(const field of ['checkInAt','checkOutAt']){const date=fd.get(`${field}__date`),time=fd.get(`${field}__time`);if(date)payload[field]=new Date(`${date}T${time||'00:00'}:00`).toISOString()}
     save.mutate(payload)
   }
